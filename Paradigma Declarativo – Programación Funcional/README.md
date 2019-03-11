@@ -398,5 +398,179 @@ Si aparecen varios cualificadores hay  que tener en cuenta que:
    ```
 
 Las  variables  definidas  en  cualificadores  posteriores  ocultan las  variables definidas por  cualificadores anteriores.  Las siguientes expresiones son listas definidas  por  comprehensión  de  forma válida.  Sin  embargo,  no es  una  buena costumbre  reutilizar  los  nombres  de  las  variables  ya  que  dificulta la comprensión de los  programas.
+```haskell
+? [x | x<-[[1,2],[3,4]], x<-x]
+[1,2, 3, 4]
+? [x | x<-[1,2], x<-[3,4]]
+[3,4, 3, 4]
+```
+Un cambio  en  el orden  de  los  *cualificadores*  puede  tener  un  efecto directo  en  la eficiencia. Los siguientes ejemplos producen  el mismo resultado, pero el primero utiliza  más  reducciones  debido a  que repite la evaluación de "*even x*" por  cada valor posible de *"y".*
+```haskell
+? [ (x,y) | x<-[1..3], y<-[1..2], even x ] 
+[(2,1), (2,2)]
+(110 reductions, 186 cells)  
+? [ (x,y) | x<-[1..3], even x, y<-[1..2] ]
+[(2,1), (2,2)]
+(62 reductions, 118 cells)
+```
+##### Algunos ejemplos:
 
+ - **Sumar  los  elementos  de  una  lista:**  En este  caso,  el  caso base  es  que  la  lista  se encuentre  vacía  y devuelve  0, mientras  tanto  que  siga  sumando  los  elementos con la operación recursiva.
+   ```haskell 
+   sumar::[Int]->Int 
+   sumar [ ] = 0 sumar (x:xs) = x + sumar(xs)
+   
+   Main> sumar [5,4,7,8] 
+   24 
+   ```
+ - **Invertir  una  lista:**  El  operador  **Ord**  me  sirve  para  indicar  que  representa  a cualquier  tipo de dato.
+   ```haskell 
+   invertir::Ord a=>[a]->[a]
+   invertir [ ] = [ ]
+   invertir (x:xs) = (invertir xs)++[x]
+   
+   Main> invertir [5,4,7,8]
+   [8,7,4,5]
+   ```
+ - **Comparar si 2 listas son iguales:** 
+   ```haskell 
+   igualLista:: Eq a => [a]->[a]->Bool
+   igualLista l1 l2 = l1 == l2
+   
+   Main> igualLista ["Hola","Mundo"]["Mundo","Hola"] 
+   False
+   ```
+ - **Comprobar  si  una  lista  esta  ordenada:** En  este  caso  *‘y’*  representa  al  2do elemento de la lista.
+   ```haskell 
+   lista_ordenada::Ord a=>[a]->Bool
+   lista_ordenada [] = True
+   lista_ordenada [_] = True
+   lista_ordenada (x:y:xs)  = (x<=y) && lista_ordenada(y:xs)
+   
+   Main> lista_ordenada ['a','b','c','d']
+   True
+   ```
+ - **Mostrar  el  elemento  que  se  encuentra  en  cierta  ubicación:** Como  en  un  array  el 1er  elemento esta en la ubicación 0.
+   ```haskell 
+   mostrar_ubicacion::Ord a=>[a]->Int->a
+   mostrar_ubicacion l n = l!!n
+   Main> mostrar_ubicacion [15,25,26,28] 2
+   26
+   ```
+- **Mayor  elemento de una lista:** Como  en  un  array  el 1er  elemento esta en la ubicación 0.
+   ```haskell
+   mayor::[Int]->Int mayor (x:xs)
+	   | x > mayor(xs) = x
+	   | otherwise = mayor(xs)
+   
+   Main> mayor [78,24,56,93,21,237,46,74,125]
+   237
+   ```
+- **Devolver los cuadrados de una lista:** Estamos  diciendo  que  ***x*** pertenece  a  la  lista  y además  debe  cumplir  la  condición  de  ser  par.  Como  en varios lenguajes el length cuenta los  elementos.
+   ```haskell
+   cuadrados::[Int]->[Int]
+   cuadrados [ ] = [ ]
+   cuadrados l = [x*x| x <- l]
+   
+   Main> cuadrados [1..10
+   [1,4,9,16,25,36,49,64,81,100]
+   ```
+- **Devolver  una  lista  de  numeros  primos  de  1  a  n:** Para  ello  debemos  crear nuestra  función  para  saber  si  un  numero  es  primo  o  no  y después  la  aplicamos a la lista por comprensión:
+   ```haskell
+   divisible::Int->Int->Bool divisible x y = (mod x y) ==0
+   divisibles::Int->[Int]
+   divisibles x = [y | y <-[1..x],divisible
+   esPrimo::Int->Bool
+   esPrimo n = length (divisibles n) <=2
+   ```
+- **Numeros Primos** 
+   ```haskell
+   primos::Int->[Int]
+   primos n = [x | x <-[1..n],esPrimo x]
 
+   Main> primos 100
+   [1,2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97]
+   ```
+
+### Funciones útiles en  listas
+- **!!:** Retorna el elemento ubicado en la posición n,  empezando desde cero.
+   ```haskell
+   Main> ["maritza","celeste","nadia","maria","julia"]!!1
+   “celeste”
+   ```
+- **head:** Retorna el  primer  elemento de la lista.
+   ```haskell
+   Main> head [11,1,1985,22,8,2007]
+   11
+   ```
+
+- **last:** Retorna el último elemento de la lista.
+   ```haskell
+   Main> last [11,1,1985,22,8,2007]
+   2007
+   ```
+ - **tail:** Retorna todos los  elementos menos  el primero.
+   ```haskell
+   Main> tail [11,1,1985,22,8,2007
+   [1,1985,22,8,2007]
+   ```
+- **init:** Retorna todos los  elementos menos  el último.
+   ```haskell
+   Main> init [11,1,1985,22,8,2007]
+   [11,1,1985,22,8]
+   ```
+- **length:** Retorna el  número de elementos de la  lista.
+   ```haskell
+   Main> length [11,1,1985,22,8,2007]
+   6
+   ```
+- **take:** Retorna los  primeros  n elementos  de la lista.
+   ```haskell
+   Main> take 2 [11,1,1985,22,8,2007]
+   [11,1]
+   ```
+- **drop:** Retorna los  elementos de la lista,  excepto los n primeros.
+   ```haskell
+   Main> drop 2 [11,1,1985,22,8,2007] 
+   [1985,22,8,2007]
+   ```
+- **takeWhile:** Más  potente  que  take  pues  puede  retornar  ciertos  tipos  de  datos indicados.
+   ```haskell
+   Main> takeWhile (<=15) [1..30] 
+   [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+   ```
+- **dropWhile:** Más  potente  que  drop  pues  puede  retornar  ciertos  tipos  de  datos indicados.
+   ```haskell
+   Main> dropWhile (<=15) [1..30]
+   [16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+   ```
+- **reverse:** Invierte una lista
+   ```haskell
+   Main> reverse [11,1,1985,22,8,2007]
+   [2007,8,22,1985,1,11]
+   ```
+- **concat:** Toma ciertos  elementos o listas  y  las retorna en una sola lista.
+   ```haskell
+   Main> concat ["open","source","solutions"]
+   “opensourcesolutions”
+   ```
+- **words:** Retorna  una  lista  de  strings  de  acuerdo  a  los  espacios  en  blanco  de  un string.
+   ```haskell
+   Main> words ” I like to use Debian GNU/Linux”
+   ["I","like","to","use","Debian","GNU/Linux"]   ```
+- **unwords:** Retorna un  string de una lista de strings.
+   ```haskell
+   Main> unwords ["I","like","to","use","Debian","GNU/Linux"]
+   “I like to use Debian GNU/Linux”   
+   ```
+
+- **elem:** Retorna si un elemento esta o no en la lista
+   ```haskell
+   Main> elem ‘t’ ['a','f','r','h','t']
+   True 
+   ```
+- **notElem:** Lo opuesto a elem
+   ```haskell
+   Main> notElem ‘t’ ['a','f','r','h','t']
+   False
+   ```

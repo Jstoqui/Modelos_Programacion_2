@@ -203,6 +203,8 @@ Prolog implementa algunas funciones matemáticas:
 - sqrt/1 : raíz cuadrada 
 - round/1 : redondeo 
 - random/1 : número aleatorio
+
+
 Las variables que aparecen en el argumento de las funciones  deben estar adecuadamente instanciadas.
 ```
 ?­ X is sqrt(6). –  Correcto: X=2.449

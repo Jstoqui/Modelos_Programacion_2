@@ -112,4 +112,291 @@ cuadrado (3+4)
 ```
 Esta forma  de  evaluar  una  función  recibe  el  nombre  de  evaluación por  valor, evaluación  ansiosa  o  impaciente  y consiste  en  reducir  primero  las  expresiones que manejan valores  para luego  pasarlas por  valor  a las funciones.
 
-`[TOC]`
+Otra forma sería:
+```haskell
+cuadrado (3+4)
+	(3 + 4) * (3 + 4) (cuadrado)
+	7 * (3 + 4)  	  (+)
+	7 * 7  		  (+)
+	49  		  (*)
+```
+Esta otra  forma  recibe  el  nombre  de  evaluación  por nombre  o  evaluación perezosa  o lenta  (**lazy**),  de esta  forma primero se  hacen los reemplazos correspondientes  a  las  definiciones  de  las  funciones  y tan  solo  se  evalúan  cuando ya  es  necesario.  No  importa  la  forma que  utilizamos,  siempre  el  resultado  final  es el  mismo.  El  proceso  para  evaluar  una  expresión  básicamente  es  simple:  sustituir y simplificar  usando  reglas  primitivas  y reglas  definidas  por  el  programador  en forma de definiciones.
+
+Veamos  otro ejemplo,  recordemos la función factorial:
+```haskell
+factorial::Int->Int
+factorial 0 = 1
+factorial n = n * factorial(n-1)
+```
+Con esta definición en mente reduzcamos la siguiente expresión:
+```haskell
+
+3 * (factorial 2) 		(factorial)
+3 * (2 * factorial 1)		(factorial)
+3 *(2 * (1 * factorial 0 )	(factorial)
+3 * (2 * (1 * 1))		(*)
+3 * (2 * 1)			(*)
+3 * 2				(*)
+6				(*)
+```
+Una expresión es canónica o está en  forma normal si no puede reducirse. Algunas expresiones  no pueden reducirse del todo.
+
+Por ejemplo,  si /  es la operación  de división,  entonces  la expresión 1 /  0 no puede reducirse.
+
+Para  estos  casos  existe  un  símbolo  denominado  **bottom  (^)** que significa  valor indefinido.
+
+De esta  manera,  podemos decir que  **TODA**  expresión  denota un valor.
+
+Expresado  en  otras  palabras  en  ***programación  funcional***  siempre  se  espera que toda  definición  genere  un  valor  y  que  este  valor  corresponda  con  la  signatura  de la declaración.
+
+
+***Haskell***  reduce  las  expresiones  de  manera  perezosa  y aunque  a  priori  podemos decir que es una  forma más  larga de evaluación tiene la ventaja de poder manejar ciertas  expresiones  infinitas.  Veamos un ejemplo  de este caso,  con  las  siguientes funciones:
+```haskell
+infinito :: Integer
+infinito = 1 + infinito
+  
+tres :: Integer->Integer
+tres x = 3
+```
+Si  elegimos  reducirla  haciendo  evaluación  por  valor  la  evaluación  no  terminaría nunca,  ocurriría lo siguiente:
+
+```haskell
+tres infinito
+    tres (1 + infinito)  (infinito)
+    tres (1 + (1 + infinito) (infinito)
+    ...
+```
+Si elegimos hacerlo por nombre:
+```haskell
+tres infinito
+   3  (tres)
+```
+## Tipos de datos
+Existen dos clases de tipos:
+ - tipos básicos 	
+ - tipos compuestos  o derivados.
+
+Los  **tipos básicos**  son aquellos cuyos valores son primitivos,  por ejemplo:
+
+ - **Int:**  subconjunto  de  los  enteros  (normalmente,  los  enteros  representables  por una palabra del procesador):  2,  1...
+ - **Integer:** enteros  (precisión  absoluta) Char:  caracteres:  ’a’,’5’, ’\n’,  ’\xF4’...
+ - **Float/Double:**  números  en  punto  flotante  de  simple/doble  precisión:  3.14159,  2, 2.5e+2...
+ - **String:** cadenas  de caracteres:  "hola", … 
+ - **Bool:**  booleanos:  True, False.
+
+Los  tipos  derivados  o  compuestos  son  aquellos  cuyo  valores  se  construyen  de otros  tipos.  Por ejemplo:
+
+ - (Int,  Char),  el  tipo  de  pares  de  valores  donde  la  primer  componente  es  un número y  la segunda es  un  caracter.
+ - (Int->Int),  el  tipo  de  funciones  cuyos  argumentos  son  números  y  retornan  otro número.
+ - [Int], una lista de números.
+Cada tipo tiene  asociado un cierto conjunto de operaciones.
+
+## Operadores
+Cada tipo de dato tiene unos operadores asociados, recordemos que los operadores son trabajados como funciones,  veamos  la siguiente lista:
+
+**Booleanos**
+Se  representan  por  el  tipo  "*Bool*"  y  contienen  dos  valores:  *"True"*  y  *"False"*.  El estándar  prelude  incluye  varias  funciones  para  manipular  valores  booleanos: **(&&),(||) y not.**
+
+ - x &&  y  es  True si y  sólo  si  x e y  son  True 
+ - x ||  y  es  True si y  sólo si  x ó y  ó ambos son  True 
+ - not x  es  el valor opuesto de x  (not  True  =  False,not  False =  True)
+
+También  se  incluye  una  forma  especial  de  expresión  condicional  que  permite seleccionar entre  dos alternativas  dependiendo de un valor booleano:
+```haskell
+if expresion_booleana then x else y
+```
+Si  la  expresión  booleana  expresión_booleana  es True  devuelve  x,  si  es  False, devuelve  y. 
+Obsérvese que  una  expresión de ese tipo sólo es  aceptable si expresión_booleana  es  de tipo Bool y  x  e y  son del mismo tipo.
+<![endif]-->
+
+### Enteros
+Representados  por  el  tipo  "Int",  se  incluyen  los  enteros  positivos  y negativos  tales como  el  273,  el  0  ó  el  383.  Como  en  muchos  sistemas,  el  rango  de  los  enteros utilizables  está restringido.
+También  se  puede  utilizar  el  tipo Integer  que  denota  enteros  sin  límites  superior  ni inferior.  En  el  estándar  prelude  se incluye  un  amplio  conjunto de  operadores  y funciones que manipulan enteros:
+
+ - **(+)** suma. 
+ - **(*)** multiplicación. 
+ - **(-)**  resta. 
+ - **(^)** potenciación.
+ - **negate** menos unario (la expresión "x" se  toma como "negate x")
+ - **div** división entera
+ - **rem** resto  de la división entera.
+
+Siguiendo la ley: 
+```haskell
+(x `div` y)*y + (x `rem` y) ==  x
+```
+ - **mod**  módulo,  como  rem  sólo  que  el  resultado  tiene  el  mismo  signo  que  el divisor.
+ - **odd** devuelve  True si el  argumento es impar even  devuelve  True si el  argumento es  par.
+ - **gcd** máximo común divisor. lcm mínimo común múltiplo.
+ - **abs** valor absoluto.
+ - **signum**  devuelve  -1,  0  o  1  si  el  argumento  es  negativo,  cero ó  positivo, respectivamente.
+
+### Flotantes
+Representados por el tipo *"Float",* los elementos de  este tipo pueden ser utilizados  para  representar  fraccionarios  así  como  cantidades  muy  largas  o  muy pequeñas.
+
+Sin embargo,  tales  valores  son  sólo  aproximaciones  a  un  número  fijo  de  dígitos  y pueden aparecer  errores  de redondeo en algunos  cálculos  que empleen operaciones en punto flotante.
+
+Un  valor numérico se toma como un flotante cuando  incluye un punto en su representación o cuando es  demasiado grande para ser representado por un entero.
+
+También se puede utilizar notación científica; por ejemplo 1.0e3 equivale a 1000.0,  mientras que 5.0e2 equivale a 0.05.
+
+El  estándar  prelude  incluye  también  múltiples  funciones  de  manipulación  de flotantes:
+
+ - pi 
+ - exp   
+ - log 
+ - sqrt
+ - sin 
+ - cos
+ - tan 
+ - asin
+ - acos
+ - atan ....
+
+## Listas  en programación funcional
+
+Una lista es una  estructura de datos  que representa un conjunto de datos  de un mismo tipo.  Su declaración es  muy  simple,  ejemplo:
+
+ - [Int]: Representa una lista de enteros [4,5,9,25,60  ] [Char]:  Representa una lista de chars  ['l','i','n','u','x']
+ - [Bool]:  Representa una lista de valores  booleanos [True,  False,  True] 
+ - [String]:  Representa una  lista de strings ["buenas","noches"]
+ - [Float]:  Representa una lista de flotantes  [2.5,5.8,4.3,7.1 ]
+
+Si  **a** es  un tipo cualquiera,  entonces **[a]**  representa  el  tipo de  listas cuyos elementos  son valores  de  tipo a.  Es  importante para  el manejo de listas  separar  el primer elemento (cabeza),  del resto(cola)  de la siguiente manera **(x:xs)**.
+<center>x representa la cabeza y  xs la cola.</center>
+
+Hay  varias formas de escribir  expresiones de listas:
+
+ - La forma más simple es la  lista vacía,  representada mediante [].
+ - Las  listas  no vacías  pueden  ser  construidas  enunciando explícitamente  sus elementos,  por  ejemplo [1,3,10]  o  añadiendo  un  elemento  al  principio de  otra lista  utilizando  el  operador  de  construcción (:).  Estas  notaciones son equivalentes:
+	 - [1,3,10]  =  1:[3,10]  =  1:(3:[10])  =  1:(3:(10:[]))
+ - El  operador  (:) es  asociativo a la derecha, de forma que 1:3:10:[]  equivale a  (1: (3:(10:[]))),  una lista a cuyo primer elemento es 1,  el segundo 3 y  el último 10.
+
+El standar prelude incluye un amplio conjunto de funciones de manejo de listas,
+por ejemplo:
+ - length xs devuelve el número de elementos de xs.
+ - xs ++ ys devuelve la lista resultante de concatenar xs e ys.
+ - concat xss devuelve la lista resultante de concatenar las listas de xss.
+ - map f xs devuelve la lista de valores obtenidos al aplicar la función f a cada uno de los elementos de la lista xs.
+
+### Ejemplos:
+**<? length [1,3,10]**
+**3**
+**? [1,3,10] ++ [2,6,5,7] [1, 3, 10, 2, 6, 5, 7]**
+**? concat [[1], [2,3], [], [4,5,6]] [1, 2, 3, 4, 5, 6]**
+**? map fromEnum ['H', 'o', 'l', 'a'] [104, 111, 108, 97]**
+**?**
+
+  Obsérvese  que  todos  los  elementos  de  una  lista  deben  ser  del  mismo  tipo.  La expresión ['a',2,False]  no está permitida en Haskell.
+
+## Secuencias:
+
+La  notación  de  las  secuencias  aritméticas  permite  generar  una  gran  cantidad  de listas útiles.  Existen  cuatro formas de expresar secuencias aritméticas:
+
+[m..]  Produce  una  lista  (potencialmente  infinita)  de  valores  que  comienzan  con  m y  se incrementan en pasos  simples.
+
+### Ejemplo:
+```haskell
+	? [1..]
+	[1, 2, 3, 4, 5, 6, 7, 8, 9, etc...
+```
+`[m..n]`  Produce  la  lista  de  elementos  desde  m  hasta  n,  con  incrementos  en  pasos simples.  Si m  es menor  que n devuelve la lista vacía.
+### Ejemplos:
+```haskell
+? [-3..3]
+[-3, -2, -1, 0, 1, 2, 3]
+? [1..1]
+[1]
+? [9..0]
+[]
+```
+`[m,m'..] ` Produce  la  lista  (potencialmente  infinita)  de valores  cuyos dos primeros elementos  son  m  y m'.  Si  m  es  menor  que  m'  entonces  los  siguientes  elementos de  la lista  se  incrementan en los  mismos  pasos.  Si  m  es  mayor  que m'  entonces los  incrementos  serán  negativos.  Si  son  iguales  se  obtendrá  una  lista infinita cuyos elementos serán todos iguales.
+
+### Ejemplos:
+```haskell
+? [1,3..]
+[1, 3, 5, 7, 9, 11, 13, etc...
+? [0,0..]
+[0, 0, 0, 0, 0, 0, 0, etc...
+? [5,4..]
+[5, 4, 3, 2, 1, 0, -1, etc...
+```
+
+`[m,m'..n]`  Produce  la  lista  de  elementos  [m,m',..]  hasta  el  valor  límite  n.  Los incrementos vienen marcados  por la diferencia entre m  y  m'.
+
+### Ejemplos:
+```haskell
+? [1,3..12]
+[1, 3, 5, 7, 9, 11]
+? [0,0..10]
+[0, 0, 0, 0, 0, 0, 0, etc...
+? [5,4..1]
+[5, 4, 3, 2, 1]
+```
+Las  secuencias  no  están  únicamente  restringidas  a  enteros,  pueden  emplearse con elementos enumerados  como caracteres,  flotantes,  etc.
+
+### Ejemplos:
+```haskell
+? ['0'..'9'] ++ ['A'..'Z']
+0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
+? [1.2, 1.35 .. 2.00]
+[1.2, 1.35, 1.5, 1.65, 1.8, 1.95]
+```
+
+## Listas por comprehensión:
+
+Son  listas  que  no  usan  cabeza  y cola,  sino  ciertos  argumentos  para  definir  los elementos  que pertenecen  a ella,  de esta  manera resolvemos  problemas  de  una manera muy  elegante y  potente.
+
+La  notación  de  listas  por  comprehensión  permite  declarar  de  forma concisa  una gran  cantidad  de  iteraciones sobre listas.  El formato  básico de la  definición  de una lista por comprehensión es:
+```haskell
+[  <expr>  |  <cualif_1>, <cualif_2>  .  . .  <cualif_n>  ] 
+```
+Cada `<cualif_i>`  es un cualificador.
+
+### Cualificadores  generadores:
+Un  cualificador  de  la  forma pat<-exp  es  utilizado para  extraer  cada  elemento  que  encaje  con  el  patrón  pat  de la  lista exp  en  el orden en que aparecen  los elementos  de la lista.
+
+##### Ejemplos:
+```haskell
+? [x | x <- [1 .. 12]]
+[1,2,3,4,5,6,7,8,9,10,11,12]
+? [x+x | x <- [1 .. 12]] 
+[2,4,6,8,10,12,14,16,18,20,22,24]
+? [x*x | x <- [1..10]]
+[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+```
+### Filtros  generadores:
+Una  expresión  de  valor  booleano,  el  significado  de  una  lista por comprensión con un único filtro podría definirse como:
+
+[e |condicion ]  =  if  condition  then [e]  else []
+
+Esta forma de lista por comprehensión resulta útil en combinación con generadores.
+
+##### Ejemplos:
+```haskell
+? [x*x |x<-[1..10], even x ]
+[4,16,36,64,100]
+? [x | x <- [1..10], mod x 5 ==0]
+[5,10]
+```
+<![endif]-->
+
+Si aparecen varios cualificadores hay  que tener en cuenta que:
+
+ - Las variables generadas por los cualificadores posteriores varían más
+   rápidamente que las generadas por  los cualificadores anteriores:
+   ```haskell
+   ? [ (x,y) | x<-[1..3], y<-[1..2] ]
+   [(1,1), (1,2), (2,1), (2,2), (3,1), (3,2)]
+   ```
+
+ - Los  cualificadores  posteriores podrían utilizar  los valores
+   generados  por los anteriores:
+   ```haskell
+   ? [ (x,y) | x<-[1..3], y<-[1..x]]
+   [(1,1), (2,1), (2,2), (3,1), (3,2), (3,3)]
+   ```
+
+Las  variables  definidas  en  cualificadores  posteriores  ocultan las  variables definidas por  cualificadores anteriores.  Las siguientes expresiones son listas definidas  por  comprehensión  de  forma válida.  Sin  embargo,  no es  una  buena costumbre  reutilizar  los  nombres  de  las  variables  ya  que  dificulta la comprensión de los  programas.
+
+

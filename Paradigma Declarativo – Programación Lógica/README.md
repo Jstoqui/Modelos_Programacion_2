@@ -184,6 +184,8 @@ Aunque en lógica no es importante el orden, sí que lo es en  Prolog:
 - El predicado between/3 de Prolog sirve para instanciar  variables dentro de intervalos de enteros:
 - ?-­ 5 is X –  ¡Error! X no está instanciada
 - ?­-between(1,10,X), 5 is X. – Correcto: X = 5. (se instancia X  con valores de 1 a 10)
+
+
 Con esto se evita el problema de buscar dentro de un  espacio infinito, ya que X puede tomar en principio  cualquier valor.
 
 calcular la raíz cuadrada de 16 usando la operación de potencia  de 2 (inversa de funciones)

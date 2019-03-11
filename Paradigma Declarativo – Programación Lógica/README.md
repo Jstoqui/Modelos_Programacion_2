@@ -39,12 +39,12 @@ El lenguaje Prolog, principal representante del paradigma, se  basa en un subcon
 
 En PROLOG declaramos conocimiento de la siguiente manera:
 
-```
+```prolog
 mortal(X):­humano(X).  Regla
 humano(socrates).  Hecho
 ```
 Que  podemos  hacer  con  PROLOG  y  las  declaraciones  de  conocimiento siguientes: 
-```
+```prolog
 mortal(X):­humano(X).  Regla
 humano(socrates).  Hecho
 
@@ -62,7 +62,7 @@ Maradona, ¿es mortal? 		?­- mortal(maradona).
 ![Esquema de una aplicación en programación lógica ](https://i.ibb.co/QXG6rYN/PROLOG.png) 
 ## Variable anonima
 La traducción para la consulta lógica:
-```
+```prolog
 ¿Hay algún mortal en la sala?  		?­-mortal(_).
 					  Yes
 
@@ -70,14 +70,14 @@ La traducción para la consulta lógica:
 existe x tal que p de x se cumple, donde p(x) significa que x es  mortal
 ## Principio de Universo cerrado
 Cuando preguntamos:
- ```
+ ```prolog
 ¿Hay algún mortal en la sala?  		?­-mortal(maradona).
 						  No
 
 ```
 Bueno, eso es lo que se llama Principio de Universo Cerrado o  Negación por falla (Closed World assumption): todo lo que no  está en la base de conocimientos no se puede inferir si es cierto  o no, por lo tanto se asume falso.
 ## Ejemplo
-```
+```prolog
 padrede('juan','maria'). 
 padrede('pablo','juan'). 
 padrede('pablo','marcela'). 
@@ -110,7 +110,7 @@ familiarde(A,B) :­ hermanode(A,B).
 
 ### Ejemplos
 
-```
+```prolog
 ?­ X is 3+4.  
   X=7 
   Yes
@@ -141,7 +141,7 @@ familiarde(A,B) :­ hermanode(A,B).
   Yes
 ```
 
-```
+```prolog
 precio(boligrafo, 0.5).
 precio(folios, 2.5).
 precio(portatil, 700).
@@ -156,7 +156,7 @@ No.
 
 ```
 
-```
+```prolog
 ganados( juan, 7 ).				?­ porcentaje(X,Y).
 ganados( susana, 6 ).				X = juan, 
 ganados( pedro, 2 ). 				Y = 53.84615384615385 ;
@@ -189,7 +189,7 @@ Aunque en lógica no es importante el orden, sí que lo es en  Prolog:
 Con esto se evita el problema de buscar dentro de un  espacio infinito, ya que X puede tomar en principio  cualquier valor.
 
 calcular la raíz cuadrada de 16 usando la operación de potencia  de 2 (inversa de funciones)
-```
+```prolog
 ?­-between(1,10,X), 16 is X^2. – Correcto: X = 4.
 ```
 ## Funciones
@@ -206,7 +206,7 @@ Prolog implementa algunas funciones matemáticas:
 
 
 Las variables que aparecen en el argumento de las funciones  deben estar adecuadamente instanciadas.
-```
+```prolog
 ?­ X is sqrt(6). –  Correcto: X=2.449
 ```
 ## Tipos de datos
@@ -225,7 +225,7 @@ Prolog incluye predicados que permiten clasificar términos:
 La forma de introducir datos estructurados en Prolog es  sencilla. Por ejemplo:
 
 ![Estructura de personas](https://i.ibb.co/njF1Xsv/personas.png)
-```
+```prolog
 persona( nombre(‘Pedro’), apellido(‘López’), cc( 123456789 ) ).
 persona( nombre(‘Ana’), apellido(‘Macías’), cc( 987654321 ) ).
 
@@ -237,34 +237,34 @@ persona( nombre(‘Ana’), apellido(‘Macías’), cc( 987654321 ) ).
 ```
 De igual modo, podemos construir registros compuestos. Por  ejemplo:
 ![Registro compuesto ](https://i.ibb.co/q5xQ3sm/masp-ersonas.png)
-```
+```prolog
 partido( local( nombre( ‘America’ ), ciudad(‘Cali’) ),
 visitante( nombre(‘Tolima’), ciudad(‘Tolima’) ), glocal(10), gvisit(0) ).
 partido( local( nombre( ‘Nacional’ ), ciudad(‘Medellin’) ),
 visitante( nombre(‘Equidad’), ciudad(‘Bogotá’) ), glocal(1), gvisit(2) ).
 ```
 Predicado que nos dice si un equipo gana en su casa y el tanteo:
-```
+```prolog
 ganacasa(X,Y,Z,V):­partido(local(nombre(X),ciudad(Y)),_,tlocal(Z),tvisit(V)),  Z>V.
 ```
 Consultar todos los equipos de Cali  que ganan en casa y los  tanteos
 
-```
+```prolog
 ?­-ganacasa(X,’Cali’,Y,Z). X=‘America’, Y=10, Z=0; No
 ```
 Consultar todos los equipos de Cali que ganan en casa por más  de 5 tantos:
-```
+```prolog
 ?­-ganacasa(X,’Cali’,Y,Z), Y > Z+5. X=‘America’, Y=10, Z=0; No
 ```
 ## Árboles
 En Prolog, los predicados pueden interpretarse como árboles: 
-```
+```prolog
 oracion( sujeto( ‘Pedro’ ), predicado( verbo( ‘come’ ),  objetodirecto( ‘bocadillo’ ) ) )
 ```
 ![arbol](https://i.ibb.co/BnpP8Bv/oracion.png)
 
 Y, del mismo modo, pueden representarse árboles en forma de  predicados: 
-```
+```prolog
 arbol( a, arbol( c, arbol( 1, 2, 3 ) ),
 ```
 ![ejemplo árbol](https://i.ibb.co/KbzZbQ6/arbolito.png)
@@ -272,7 +272,7 @@ arbol( a, arbol( c, arbol( 1, 2, 3 ) ),
 Escribir el recorrido en inorden de un árbol de expresión  aritmética 
 
 ![Arbol expresión aritmética](https://i.ibb.co/rZmv1zq/arbol.png)
-```
+```prolog
 % Utilizaremos el predicado % 
 a( operador, hijo_izquierda, hijo_derecha ) 
 
@@ -289,23 +289,23 @@ write(‘(‘),inord(HI),write(OP),inord(HD),write(‘)’). inord(X):­write(X)
 ```
 ## Listas
 Prolog implementa un tipo de dato especial: la lista. Una lista es  una serie de términos separados por comas entre corchetes:
-```
+```prolog
 [] 
 [a,b,c]
 [1,p(X),b,’Casa’]
 ```
 Las listas también son términos, luego se permite el  anidamiento:
-```
+```prolog
 [ [], [ 1,2 ], a, [ [ 1 ], [ s, 1.4, 5 ] ] ]
 ```
 Una secuencia de caracteres entre comillas es una cadena de  caracteres y Prolog la trata internamente como una lista de  enteros que se corresponden con los valores ASCII de los  caracteres en la cadena.
-```
+```prolog
 ?­-X = “Pedro”. 
 X = [ 80, 101, 100, 114, 111 ]
 ```
 ### Unificación de listas:
 Dos listas unifican si sus componentes unifican una a una:
-```
+```prolog
 [X, Y, Z] = [a, b, c]  –  unifica 
 [X, Y, Z] = [a, b, c, d] –  no unifica
 ```
@@ -314,7 +314,7 @@ Donde Cabeza puede ser uno o varios términos separados por , y  Cola es una lis
 Para la unificación con esta sintaxis, los términos de Cabeza  deben unificar uno a uno y Cola unifica con una lista que  contiene los términos restantes sin incluir aquellos que  unificaron con Cabeza.
 ### Ejemplos
 Longitud de una lista: 
-```
+```prolog
 % Si queremos hallar la longitud de una lista. 
 % La longitud de una lista vacia es 0. 
 % La longitud de cualquier lista es la longitud de la cola + 1.
@@ -327,7 +327,7 @@ longitud([_|T],N):-longitud(T,N0), N is N0 + 1.
 	No
 ```
 Búsqueda de un elemento
-```
+```prolog
 % Si queremos determinar si un elemento pertenece a una lista. 
 % El elemento pertenece a la lista si coincide con la cabeza de la lista. 
 % El elemento pertenece a la lista si se encuentra en la cola de la lista.
@@ -343,7 +343,7 @@ pertenece(X,[X|_]) :- !.
 	Yes
 ```
 Eliminar elemento de una lista
-```
+```prolog
 % Si queremos eliminar un elemento de la lista. 
 % Si X es la cabeza de la lista, la cola T es la lista sin X 
 % Si X no es la cabeza de la lista, conservamos la cabeza de la lista 
@@ -358,7 +358,7 @@ elimina(X,[H|T],[H|T1]):- elimina(X,T,T1).
 ```
 Concatenar listas
 
-```
+```prolog
 % Si queremos concatenar dos listas lista. 
 % Concatenar una lista vacia con L es L. 
 % Concatenar X|L1 con L2 es poner el primer 
@@ -374,7 +374,7 @@ concatenar([X|L1],L2,[X|L3]):-concatenar(L1,L2,L3).
 ```
 Comprobar si una lista es la inversa de otra
 
-```
+```prolog
 % Si queremos calcular la inversa de una lista.
 % La inversa de una lista vacía es una lista vacía 
 % La inversa de H|T es la inversa de T concatenada con H.

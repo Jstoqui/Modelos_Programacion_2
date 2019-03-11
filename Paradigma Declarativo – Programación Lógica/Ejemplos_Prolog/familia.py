@@ -2,6 +2,12 @@ from pyswip import Prolog
 prolog = Prolog()
 prolog.consult('familia.pl')
 
+prolog.assertz("father(michael,john)")
+prolog.assertz("father(michael,gina)")
+
+for result in prolog.query("father(X,Y)"):
+	print result['X'] + " padre de " + result['Y']
+
 for result in prolog.query("padrede(X,Y)"):
 	print result['X'] + " padre de " + result['Y']
 
@@ -19,5 +25,5 @@ for result in prolog.query("hermanode(X,Y)"):
 	
 print
 
-lista = list(prolog.query("familiarde(X,Y)"))
+lista = prolog.query("familiarde(X,Y)")
 print lista
